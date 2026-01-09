@@ -1,5 +1,6 @@
 from django import forms
 from .models import Ticket
+from .models import Reply
 
 class TicketCreateForm(forms.ModelForm):
     class Meta:
@@ -24,3 +25,8 @@ class TicketStatusForm(forms.ModelForm):
     class Meta:
         model = Ticket
         fields = ['status']
+
+class ReplyForm(forms.ModelForm):
+    class Meta:
+        model = Reply
+        fields = ['message']

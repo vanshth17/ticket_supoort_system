@@ -6,6 +6,8 @@ from .models import Ticket
 from .forms import TicketAssignForm
 from .forms import TicketStatusForm
 from .models import TicketStatus
+from .models import Reply
+from .forms import ReplyForm
 
 @login_required
 @group_required("Customer")
@@ -83,4 +85,44 @@ def update_ticket_status(request, ticket_id):
         {"form": form, "ticket": ticket}
     )
 
+@login_required
+def ticket_detail(request, ticket_id):
+    ticket = get_object_or_404(Ticket, id=ticket_id)
+    replies = ticket.replies.order_by("created_at")
 
+    # Permission checks
+    user = request.user
+    is_customer = user.groups.filter(name="Customer").exists()
+    is_agent = user.groups.filter(name="SupportAgent").exists()
+
+    # Block unauthorized access
+    if is_customer and ticket.created_by != user:
+        return redirect("customer_tickets")
+
+    if is_agent and ticket.assigned_to != user:
+        return redirect("agent_tickets")
+
+    # Block replies if closed
+    can_reply = ticket.status != TicketStatus.CLOSED
+
+    if request.method == "POST" and can_reply:
+        form = ReplyForm(request.POST)
+        if form.is_valid():
+            reply = form.save(commit=False)
+            reply.ticket = ticket
+            reply.author = user
+            reply.save()
+            return redirect("ticket_detail", ticket_id=ticket.id)
+    else:
+        form = ReplyForm()
+
+    return render(
+        request,
+        "tickets/ticket_detail.html",
+        {
+            "ticket": ticket,
+            "replies": replies,
+            "form": form,
+            "can_reply": can_reply,
+        }
+    )

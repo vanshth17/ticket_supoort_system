@@ -1,0 +1,30 @@
+<h2>{{ ticket.title }}</h2>
+<p>Status: {{ ticket.status }}</p>
+<p>{{ ticket.description }}</p>
+
+<hr>
+
+<h3>Conversation</h3>
+
+{% for reply in replies %}
+  <div style="border:1px solid #ccc; padding:8px; margin-bottom:6px;">
+    <strong>{{ reply.author.username }}</strong>
+    <small>{{ reply.created_at }}</small>
+    <p>{{ reply.message }}</p>
+  </div>
+{% empty %}
+  <p>No replies yet.</p>
+{% endfor %}
+
+<hr>
+
+{% if can_reply %}
+<h3>Add Reply</h3>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Send</button>
+</form>
+{% else %}
+<p><strong>This ticket is closed. No more replies allowed.</strong></p>
+{% endif %}

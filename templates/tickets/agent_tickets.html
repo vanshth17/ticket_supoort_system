@@ -3,13 +3,17 @@
 <ul>
   {% for ticket in tickets %}
     <li>
-      {{ ticket.title }} - {{ ticket.status }}
+      <!-- Clickable ticket title -->
+      <a href="{% url 'ticket_detail' ticket.id %}">
+        {{ ticket.title }}
+      </a>
+      - {{ ticket.status }}
       |
       <a href="{% url 'assign_ticket' ticket.id %}">Assign</a>
       |
       <a href="{% url 'update_ticket_status' ticket.id %}">Update Status</a>
     </li>
   {% empty %}
-    <li>No tickets assigned</li>
+    <li>No tickets assigned.</li>
   {% endfor %}
 </ul>

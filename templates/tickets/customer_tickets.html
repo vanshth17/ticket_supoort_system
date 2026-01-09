@@ -2,8 +2,17 @@
 
 <ul>
   {% for ticket in tickets %}
-    <li>{{ ticket.title }} - {{ ticket.status }}</li>
+    <li>
+      <a href="{% url 'ticket_detail' ticket.id %}">
+        {{ ticket.title }}
+      </a>
+      - {{ ticket.status }}
+    </li>
   {% empty %}
-    <li>No tickets yet</li>
+    <li>No tickets created yet.</li>
   {% endfor %}
 </ul>
+
+<br>
+
+<a href="{% url 'create_ticket' %}">Create New Ticket</a>
