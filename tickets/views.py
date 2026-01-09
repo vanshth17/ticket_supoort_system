@@ -8,6 +8,8 @@ from .forms import TicketStatusForm
 from .models import TicketStatus
 from .models import Reply
 from .forms import ReplyForm
+from django.core.paginator import Paginator
+
 
 @login_required
 @group_required("Customer")
@@ -28,20 +30,24 @@ def create_ticket(request):
 @group_required("Customer")
 def customer_tickets(request):
     status = request.GET.get("status")
-
     tickets = Ticket.objects.filter(created_by=request.user)
 
     if status:
         tickets = tickets.filter(status=status)
 
+    paginator = Paginator(tickets, 5)   # 5 tickets per page
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     return render(
         request,
         "tickets/customer_tickets.html",
         {
-            "tickets": tickets,
+            "page_obj": page_obj,
             "selected_status": status,
         }
     )
+
 
 
 from .forms import TicketAssignForm
@@ -70,20 +76,24 @@ def assign_ticket(request, ticket_id):
 @group_required("SupportAgent")
 def agent_tickets(request):
     status = request.GET.get("status")
-
     tickets = request.user.assigned_tickets.all()
 
     if status:
         tickets = tickets.filter(status=status)
 
+    paginator = Paginator(tickets, 5)   # 5 tickets per page
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     return render(
         request,
         "tickets/agent_tickets.html",
         {
-            "tickets": tickets,
+            "page_obj": page_obj,
             "selected_status": status,
         }
     )
+
 
 
 @login_required

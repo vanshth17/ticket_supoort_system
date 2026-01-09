@@ -11,7 +11,7 @@
 <h2>My Tickets</h2>
 
 <ul>
-  {% for ticket in tickets %}
+  {% for ticket in page_obj %}
     <li>
       <a href="{% url 'ticket_detail' ticket.id %}">
         {{ ticket.title }}
@@ -26,3 +26,17 @@
 <br>
 
 <a href="{% url 'create_ticket' %}">Create New Ticket</a>
+
+<hr>
+
+<div>
+  {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+  {% endif %}
+
+  Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+
+  {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">Next</a>
+  {% endif %}
+</div>
