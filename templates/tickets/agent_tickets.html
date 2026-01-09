@@ -1,3 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Agent Tickets{% endblock %}
+
+{% block content %}
+<h2>Assigned Tickets</h2>
+
 <form method="get">
   <input type="text" name="q" placeholder="Search tickets..."
          value="{{ search_query|default:'' }}">
@@ -16,13 +22,9 @@
 
 <hr>
 
-<h2>Assigned Tickets</h2>
-
 <ul>
   {% for ticket in page_obj %}
-
     <li>
-      <!-- Clickable ticket title -->
       <a href="{% url 'ticket_detail' ticket.id %}">
         {{ ticket.title }}
       </a>
@@ -33,7 +35,7 @@
       <a href="{% url 'update_ticket_status' ticket.id %}">Update Status</a>
     </li>
   {% empty %}
-    <li>No tickets assigned.</li>
+    <li>No tickets found.</li>
   {% endfor %}
 </ul>
 
@@ -50,3 +52,4 @@
     <a href="?page={{ page_obj.next_page_number }}">Next</a>
   {% endif %}
 </div>
+{% endblock %}
