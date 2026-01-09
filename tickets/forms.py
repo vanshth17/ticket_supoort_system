@@ -19,3 +19,8 @@ class TicketAssignForm(forms.ModelForm):
         self.fields['assigned_to'].queryset = User.objects.filter(
             groups__name="SupportAgent"
         )
+
+class TicketStatusForm(forms.ModelForm):
+    class Meta:
+        model = Ticket
+        fields = ['status']

@@ -4,6 +4,8 @@ from accounts.decorators import group_required
 from .forms import TicketCreateForm
 from .models import Ticket
 from .forms import TicketAssignForm
+from .forms import TicketStatusForm
+from .models import TicketStatus
 
 @login_required
 @group_required("Customer")
@@ -57,4 +59,28 @@ def agent_tickets(request):
         "tickets/agent_tickets.html",
         {"tickets": tickets}
     )
+
+@login_required
+@group_required("SupportAgent")
+def update_ticket_status(request, ticket_id):
+    ticket = get_object_or_404(Ticket, id=ticket_id)
+
+    # Prevent changes if ticket is closed
+    if ticket.status == TicketStatus.CLOSED:
+        return redirect("agent_tickets")
+
+    if request.method == "POST":
+        form = TicketStatusForm(request.POST, instance=ticket)
+        if form.is_valid():
+            form.save()
+            return redirect("agent_tickets")
+    else:
+        form = TicketStatusForm(instance=ticket)
+
+    return render(
+        request,
+        "tickets/update_status.html",
+        {"form": form, "ticket": ticket}
+    )
+
 

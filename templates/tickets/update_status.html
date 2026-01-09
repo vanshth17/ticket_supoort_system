@@ -1,0 +1,10 @@
+<h2>Update Ticket Status</h2>
+
+<p><strong>Ticket:</strong> {{ ticket.title }}</p>
+<p><strong>Current Status:</strong> {{ ticket.status }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Update Status</button>
+</form>

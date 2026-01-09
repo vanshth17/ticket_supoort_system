@@ -6,5 +6,7 @@ urlpatterns = [
     path("", views.customer_tickets, name="customer_tickets"),
     path("<int:ticket_id>/assign/", views.assign_ticket, name="assign_ticket"),
     path("agent/", views.agent_tickets, name="agent_tickets"),
+    path("<int:ticket_id>/status/", views.update_ticket_status, name="update_ticket_status"),
+
 
 ]
