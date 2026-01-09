@@ -9,6 +9,7 @@ from .models import TicketStatus
 from .models import Reply
 from .forms import ReplyForm
 from django.core.paginator import Paginator
+from django.db.models import Q
 
 
 @login_required
@@ -30,12 +31,20 @@ def create_ticket(request):
 @group_required("Customer")
 def customer_tickets(request):
     status = request.GET.get("status")
+    query = request.GET.get("q")
+
     tickets = Ticket.objects.filter(created_by=request.user)
 
     if status:
         tickets = tickets.filter(status=status)
 
-    paginator = Paginator(tickets, 5)   # 5 tickets per page
+    if query:
+        tickets = tickets.filter(
+            Q(title__icontains=query) |
+            Q(description__icontains=query)
+        )
+
+    paginator = Paginator(tickets, 5)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -45,6 +54,7 @@ def customer_tickets(request):
         {
             "page_obj": page_obj,
             "selected_status": status,
+            "search_query": query,
         }
     )
 
@@ -76,12 +86,20 @@ def assign_ticket(request, ticket_id):
 @group_required("SupportAgent")
 def agent_tickets(request):
     status = request.GET.get("status")
+    query = request.GET.get("q")
+
     tickets = request.user.assigned_tickets.all()
 
     if status:
         tickets = tickets.filter(status=status)
 
-    paginator = Paginator(tickets, 5)   # 5 tickets per page
+    if query:
+        tickets = tickets.filter(
+            Q(title__icontains=query) |
+            Q(description__icontains=query)
+        )
+
+    paginator = Paginator(tickets, 5)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -91,6 +109,7 @@ def agent_tickets(request):
         {
             "page_obj": page_obj,
             "selected_status": status,
+            "search_query": query,
         }
     )
 

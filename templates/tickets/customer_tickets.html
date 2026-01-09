@@ -1,3 +1,11 @@
+<form method="get">
+  <input type="text" name="q" placeholder="Search tickets..."
+         value="{{ search_query|default:'' }}">
+  <button type="submit">Search</button>
+</form>
+
+<br>
+
 <h3>Filter Tickets</h3>
 
 <a href="{% url 'customer_tickets' %}">All</a> |
