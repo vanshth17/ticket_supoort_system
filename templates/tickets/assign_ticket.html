@@ -1,0 +1,9 @@
+<h2>Assign Ticket</h2>
+
+<p><strong>Ticket:</strong> {{ ticket.title }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Assign</button>
+</form>

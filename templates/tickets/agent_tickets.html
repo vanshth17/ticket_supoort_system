@@ -1,0 +1,12 @@
+<h2>Assigned Tickets</h2>
+
+<ul>
+  {% for ticket in tickets %}
+    <li>
+      {{ ticket.title }} -
+      <a href="{% url 'assign_ticket' ticket.id %}">Reassign</a>
+    </li>
+  {% empty %}
+    <li>No tickets assigned</li>
+  {% endfor %}
+</ul>

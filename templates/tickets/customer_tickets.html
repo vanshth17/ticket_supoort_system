@@ -1,0 +1,9 @@
+<h2>My Tickets</h2>
+
+<ul>
+  {% for ticket in tickets %}
+    <li>{{ ticket.title }} - {{ ticket.status }}</li>
+  {% empty %}
+    <li>No tickets yet</li>
+  {% endfor %}
+</ul>
