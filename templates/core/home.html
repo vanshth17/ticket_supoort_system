@@ -1,0 +1,19 @@
+<h1>Welcome {{ request.user.username }}</h1>
+
+{% if is_customer %}
+  <p>You are logged in as Customer</p>
+  <a href="{% url 'customer_tickets' %}">My Tickets</a><br>
+  <a href="{% url 'create_ticket' %}">Create Ticket</a><br>
+{% endif %}
+
+{% if is_agent %}
+  <p>You are logged in as Support Agent</p>
+  <a href="{% url 'agent_tickets' %}">Assigned Tickets</a><br>
+{% endif %}
+
+<br>
+<form method="post" action="/accounts/logout/" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+  </form>
+  

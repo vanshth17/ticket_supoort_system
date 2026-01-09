@@ -20,7 +20,8 @@ from core import views as core_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/' , include('django.contrib.auth.urls')),
-    path('',core_views.customer_dashboard,name="customer_dashboard"),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path("", include("core.urls")),
     path("tickets/", include("tickets.urls")),
 ]
+

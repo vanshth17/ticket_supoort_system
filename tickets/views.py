@@ -27,8 +27,22 @@ def create_ticket(request):
 @login_required
 @group_required("Customer")
 def customer_tickets(request):
-    tickets = request.user.created_tickets.all()
-    return render(request, "tickets/customer_tickets.html", {"tickets": tickets})
+    status = request.GET.get("status")
+
+    tickets = Ticket.objects.filter(created_by=request.user)
+
+    if status:
+        tickets = tickets.filter(status=status)
+
+    return render(
+        request,
+        "tickets/customer_tickets.html",
+        {
+            "tickets": tickets,
+            "selected_status": status,
+        }
+    )
+
 
 from .forms import TicketAssignForm
 from .models import Ticket
@@ -55,12 +69,22 @@ def assign_ticket(request, ticket_id):
 @login_required
 @group_required("SupportAgent")
 def agent_tickets(request):
+    status = request.GET.get("status")
+
     tickets = request.user.assigned_tickets.all()
+
+    if status:
+        tickets = tickets.filter(status=status)
+
     return render(
         request,
         "tickets/agent_tickets.html",
-        {"tickets": tickets}
+        {
+            "tickets": tickets,
+            "selected_status": status,
+        }
     )
+
 
 @login_required
 @group_required("SupportAgent")
