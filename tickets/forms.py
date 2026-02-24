@@ -5,8 +5,16 @@ from .models import Reply
 class TicketCreateForm(forms.ModelForm):
     class Meta:
         model = Ticket
-        fields = ['title' , 'description']
+        fields = ["title", "description"]
 
+        widgets = {
+            "title": forms.TextInput(attrs={
+                "placeholder": "Short summary of your issue"
+            }),
+            "description": forms.Textarea(attrs={
+                "placeholder": "Explain the problem in detail..."
+            }),
+        }
 from django.contrib.auth.models import User
 
 class TicketAssignForm(forms.ModelForm):
@@ -24,7 +32,13 @@ class TicketAssignForm(forms.ModelForm):
 class TicketStatusForm(forms.ModelForm):
     class Meta:
         model = Ticket
-        fields = ['status']
+        fields = ["status"]
+
+        widgets = {
+            "status": forms.Select(attrs={
+                "class": "status-select"
+            })
+        }
 
 class ReplyForm(forms.ModelForm):
     class Meta:

@@ -1,7 +1,47 @@
-<h2>Create Ticket</h2>
+{% extends "base.html" %}
+{% block title %}Create Ticket{% endblock %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit Ticket</button>
-</form>
+{% block content %}
+
+<div class="panel">
+
+  <h2>Create Support Ticket</h2>
+  <p class="muted">
+    Describe your issue clearly so our support team can help you faster.
+  </p>
+
+  <div class="form-card">
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label>Title</label>
+        {{ form.title }}
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        {{ form.description }}
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn primary-btn">
+            Submit Ticket
+        </button>
+    
+        <button type="button"
+                class="btn cancel-btn"
+                onclick="window.location.href='{% url 'customer_tickets' %}'">
+            Cancel
+        </button>
+    </div>
+    </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+{% endblock %}

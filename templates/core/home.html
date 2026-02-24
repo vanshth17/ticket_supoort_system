@@ -1,19 +1,78 @@
-<h1>Welcome {{ request.user.username }}</h1>
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
 
-{% if is_customer %}
-  <p>You are logged in as Customer</p>
-  <a href="{% url 'customer_tickets' %}">My Tickets</a><br>
-  <a href="{% url 'create_ticket' %}">Create Ticket</a><br>
-{% endif %}
+{% block content %}
+<div class="panel">
 
-{% if is_agent %}
-  <p>You are logged in as Support Agent</p>
-  <a href="{% url 'agent_tickets' %}">Assigned Tickets</a><br>
-{% endif %}
+  <h2>Dashboard</h2>
+  <p>Welcome, <strong>{{ request.user.username }}</strong></p>
 
-<br>
-<form method="post" action="/accounts/logout/" style="display:inline;">
-    {% csrf_token %}
-    <button type="submit">Logout</button>
-  </form>
-  
+  <!-- Stats -->
+  <div class="card-grid" style="margin-top:15px;">
+    <div class="card">
+      <h3>Total Tickets</h3>
+      <h2>{{ total_tickets }}</h2>
+    </div>
+
+    <div class="card">
+      <h3>Open Tickets</h3>
+      <h2>{{ open_tickets }}</h2>
+    </div>
+  </div>
+
+  <!-- Recent Tickets -->
+  <div class="panel" style="margin-top:25px;">
+    <h3>Recent Tickets</h3>
+
+    {% if recent_tickets %}
+    <table>
+      <tr>
+        <th>Title</th>
+        <th>Status</th>
+      </tr>
+
+      {% for ticket in recent_tickets %}
+      <tr>
+        <td>{{ ticket.title }}</td>
+        <td>
+          <span class="badge {{ ticket.status }}">
+            {{ ticket.status }}
+          </span>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}
+      <p>No tickets yet.</p>
+    {% endif %}
+  </div>
+
+  <!-- Actions -->
+  <div class="card-grid" style="margin-top:25px;">
+
+    {% if is_customer %}
+    <div class="card">
+        <h3>My Tickets</h3>
+        <p>View and track your support requests.</p>
+        <a class="btn" href="{% url 'customer_tickets' %}">View Tickets</a>
+    </div>
+
+    <div class="card">
+        <h3>Create Ticket</h3>
+        <p>Raise a new support request.</p>
+        <a class="btn" href="{% url 'create_ticket' %}">Create</a>
+    </div>
+    {% endif %}
+
+    {% if is_agent %}
+    <div class="card">
+        <h3>Assigned Tickets</h3>
+        <p>View and manage assigned tickets.</p>
+        <a class="btn" href="{% url 'agent_tickets' %}">Open</a>
+    </div>
+    {% endif %}
+
+  </div>
+
+</div>
+{% endblock %}

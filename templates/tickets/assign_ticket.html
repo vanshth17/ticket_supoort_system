@@ -1,9 +1,48 @@
-<h2>Assign Ticket</h2>
+{% extends "base.html" %}
+{% block title %}Assign Ticket{% endblock %}
 
-<p><strong>Ticket:</strong> {{ ticket.title }}</p>
+{% block content %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Assign</button>
-</form>
+<div class="panel">
+
+  <h2>Assign Ticket</h2>
+  <p class="muted">
+    Assign this ticket to a support agent.
+  </p>
+
+  <!-- Ticket Context -->
+  <div class="info-box">
+    <p><strong>Title:</strong> {{ ticket.title }}</p>
+    <p><strong>Customer:</strong> {{ ticket.created_by.username }}</p>
+  </div>
+
+  <!-- Assign Form -->
+  <div class="form-card">
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label>Select Agent</label>
+        {{ form.assigned_to }}
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn primary-btn">
+          Assign Ticket
+        </button>
+
+        <button type="button"
+                class="btn cancel-btn"
+                onclick="window.history.back()">
+          Cancel
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+{% endblock %}

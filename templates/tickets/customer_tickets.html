@@ -14,38 +14,58 @@
 
 <h3>Filter Tickets</h3>
 
-<a href="{% url 'customer_tickets' %}">All</a> |
-<a href="?status=OPEN">Open</a> |
-<a href="?status=IN_PROGRESS">In Progress</a> |
-<a href="?status=RESOLVED">Resolved</a> |
-<a href="?status=CLOSED">Closed</a>
+<div class="toolbar">
 
+  <div class="filters">
+    <a href="{% url 'customer_tickets' %}" class="filter-btn">All</a>
+    <a href="?status=OPEN" class="filter-btn">Open</a>
+    <a href="?status=IN_PROGRESS" class="filter-btn">In Progress</a>
+    <a href="?status=RESOLVED" class="filter-btn">Resolved</a>
+    <a href="?status=CLOSED" class="filter-btn">Closed</a>
+  </div>
+
+</div>
 <hr>
 
-<ul>
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Status</th>
+    <th>Action</th>
+  </tr>
+
   {% for ticket in page_obj %}
-    <li>
-      <a href="{% url 'ticket_detail' ticket.id %}">
-        {{ ticket.title }}
-      </a>
-      - {{ ticket.status }}
-    </li>
+  <tr>
+    <td>{{ ticket.title }}</td>
+    <td>
+      <span class="badge {{ ticket.status }}">
+        {{ ticket.status }}
+      </span>
+    </td>
+    <td>
+      <a href="{% url 'ticket_detail' ticket.id %}">View</a>
+    </td>
+  </tr>
   {% empty %}
-    <li>No tickets found.</li>
+  <tr>
+    <td colspan="3">No tickets found.</td>
+  </tr>
   {% endfor %}
-</ul>
+</table>
 
-<hr>
+<div class="pagination">
 
-<div>
   {% if page_obj.has_previous %}
-    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    <a class="page-btn" href="?page={{ page_obj.previous_page_number }}">Previous</a>
   {% endif %}
 
-  Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+  <span class="page-info">
+    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+  </span>
 
   {% if page_obj.has_next %}
-    <a href="?page={{ page_obj.next_page_number }}">Next</a>
+    <a class="page-btn" href="?page={{ page_obj.next_page_number }}">Next</a>
   {% endif %}
+
 </div>
 {% endblock %}

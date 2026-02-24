@@ -1,10 +1,52 @@
-<h2>Update Ticket Status</h2>
+{% extends "base.html" %}
+{% block title %}Update Ticket Status{% endblock %}
 
-<p><strong>Ticket:</strong> {{ ticket.title }}</p>
-<p><strong>Current Status:</strong> {{ ticket.status }}</p>
+{% block content %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Update Status</button>
-</form>
+<div class="panel">
+
+  <h2>Update Ticket Status</h2>
+  <p class="muted">
+    Change the current status of this ticket.
+  </p>
+
+  <!-- Ticket Context -->
+  <div class="info-box">
+    <p><strong>Title:</strong> {{ ticket.title }}</p>
+    <p><strong>Current Status:</strong>
+      <span class="badge {{ ticket.status }}">
+        {{ ticket.status }}
+      </span>
+    </p>
+  </div>
+
+  <!-- Status Update Form -->
+  <div class="form-card">
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label>Select New Status</label>
+        {{ form.status }}
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn primary-btn">
+          Update Status
+        </button>
+
+        <button type="button"
+                class="btn cancel-btn"
+                onclick="window.history.back()">
+          Cancel
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+{% endblock %}

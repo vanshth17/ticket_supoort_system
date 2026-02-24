@@ -1,30 +1,73 @@
-<h2>{{ ticket.title }}</h2>
-<p>Status: {{ ticket.status }}</p>
-<p>{{ ticket.description }}</p>
+{% extends "base.html" %}
+{% block title %}Ticket Detail{% endblock %}
 
-<hr>
+{% block content %}
 
-<h3>Conversation</h3>
+<div class="panel">
 
-{% for reply in replies %}
-  <div style="border:1px solid #ccc; padding:8px; margin-bottom:6px;">
-    <strong>{{ reply.author.username }}</strong>
-    <small>{{ reply.created_at }}</small>
-    <p>{{ reply.message }}</p>
+  <!-- Ticket Header -->
+  <div class="ticket-header">
+    <div>
+      <h2>{{ ticket.title }}</h2>
+      <p class="muted">{{ ticket.description }}</p>
+    </div>
+
+    <div class="ticket-meta">
+      <span class="badge {{ ticket.status }}">
+        {{ ticket.status }}
+      </span>
+    </div>
   </div>
-{% empty %}
-  <p>No replies yet.</p>
-{% endfor %}
 
-<hr>
+  <hr>
 
-{% if can_reply %}
-<h3>Add Reply</h3>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Send</button>
-</form>
-{% else %}
-<p><strong>This ticket is closed. No more replies allowed.</strong></p>
-{% endif %}
+  <!-- Conversation -->
+  <h3>Conversation</h3>
+
+  <div class="conversation">
+
+    {% for reply in replies %}
+    <div class="reply-card">
+      <div class="reply-meta">
+        <strong>{{ reply.author.username }}</strong>
+        <span>{{ reply.created_at|date:"d M Y, H:i" }}</span>
+      </div>
+
+      <div class="reply-message">
+        {{ reply.message }}
+      </div>
+    </div>
+    {% empty %}
+    <p class="muted">No replies yet.</p>
+    {% endfor %}
+
+  </div>
+
+  <hr>
+
+  <!-- Reply Form -->
+  {% if can_reply %}
+  <div class="reply-form">
+    <h3>Add Reply</h3>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label>Message</label>
+        {{ form.message }}
+      </div>
+      <button type="submit" class="btn primary-btn">
+        Send Reply
+      </button>
+    </form>
+  </div>
+  {% else %}
+    <p class="muted">
+      This ticket is closed. No more replies allowed.
+    </p>
+  {% endif %}
+
+</div>
+
+{% endblock %}

@@ -88,18 +88,24 @@ def agent_tickets(request):
     status = request.GET.get("status")
     query = request.GET.get("q")
 
-    tickets = request.user.assigned_tickets.all()
+    unassigned_tickets = Ticket.objects.filter(assigned_to__isnull=True)
+    assigned_tickets = Ticket.objects.filter(assigned_to=request.user)
 
     if status:
-        tickets = tickets.filter(status=status)
+        unassigned_tickets = unassigned_tickets.filter(status=status)
+        assigned_tickets = assigned_tickets.filter(status=status)
 
     if query:
-        tickets = tickets.filter(
+        unassigned_tickets = unassigned_tickets.filter(
+            Q(title__icontains=query) |
+            Q(description__icontains=query)
+        )
+        assigned_tickets = assigned_tickets.filter(
             Q(title__icontains=query) |
             Q(description__icontains=query)
         )
 
-    paginator = Paginator(tickets, 5)
+    paginator = Paginator(assigned_tickets, 5)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -107,6 +113,7 @@ def agent_tickets(request):
         request,
         "tickets/agent_tickets.html",
         {
+            "unassigned_tickets": unassigned_tickets,
             "page_obj": page_obj,
             "selected_status": status,
             "search_query": query,
